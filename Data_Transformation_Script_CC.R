@@ -11,3 +11,4 @@ data_example_1 <- data.frame(column_a = c("School_a", "School_a", "School_b", "S
 library(reshape2)
 data_example_2 <- melt(data_example_1, 
                        id.vars = c("column_a", "column_b"))
+
