@@ -3,10 +3,10 @@ rm(list=ls())
 library(tidyverse)
 library(readxl)
 
-
 # Observations: Traditional schools in Baltimore City Schools
 
 ## Load and munge data
+
 
 #First Data Set
 
@@ -19,7 +19,11 @@ View(
 
 library(readxl)
 SOURCE_MISA_2017_18_PUBLIC <- read_excel("~/Downloads/SOURCE MISA 2017-18 PUBLIC.xlsx")
-View(SOURCE_MISA_2017_18_PUBLIC)  
+View(SOURCE_MISA_2017_18_PUBLIC) 
+
+names(SOURCE_MISA_2017_18_PUBLIC)[names(SOURCE_MISA_2017_18_PUBLIC) == 'School'] <- 'School Number'
+View(SOURCE_MISA_2017_18_PUBLIC)
+
 
 ## Join data 
 
