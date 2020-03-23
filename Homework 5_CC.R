@@ -2,7 +2,7 @@
 ## Import 1st Dataset
 
 library(readxl)
-X2018_19_parent_survey_results_3_3_2020 <- read_excel("2018-19_parent_survey_results__3.3.2020.xlsx")
+X2018_19_parent_survey_results_3_3_2020 <- read_excel("2018-19_parent_survey_results__3.3.2020.xlsx") # ND: This file is not in your repository
 View(X2018_19_parent_survey_results_3_3_2020) 
 
 
@@ -16,6 +16,7 @@ View(parent_climate_survey)
 ## Dropped scores because they are not meaningful with score criterion/description
 ## Dropped parent response counts but kept response rates 
 
+# ND: Consider using DPLYR's Select function to drop columns
 parent_climate_survey$`Parent Response Count` <- parent_climate_survey$`Estimated Parent Number Eligible1` <- parent_climate_survey$`Administration Dimension Score` <- parent_climate_survey$`Creativity & the Arts Dimension Score` <- parent_climate_survey$`Physical Environment Dimension Score` <- parent_climate_survey$`Learning Climate Dimension Score` <- parent_climate_survey$`Family Involvement Dimension Score` <- parent_climate_survey$`School Resources Dimension Score` <- parent_climate_survey$`Safety Dimension Score` <- parent_climate_survey$`Satisfaction with School Dimension Score` <- parent_climate_survey$`Grit Dimension Score` <- parent_climate_survey$OVERALL <- parent_climate_survey$`District Office Dimension Score` <- NULL
 
 
@@ -23,6 +24,7 @@ parent_climate_survey$`Parent Response Count` <- parent_climate_survey$`Estimate
 ## Drop Rows
 ## Dropped high school climate data to compare with PARCC scores (taken every year 3rd-8th but not tested in high school)
 
+# ND: It's generally not a good idea to refer to rows by number
 parent_climate_survey_1 <- parent_climate_survey[-c(61, 62, 91, 108, 109, 115, 121, 125, 126, 129, 130, 132, 133, 139, 140, 143, 145:165, 167:169), ]
 View(parent_climate_survey_1)
 
@@ -34,7 +36,7 @@ save(parent_climate_survey_1, file="parent_climate_survey_1.Rda")
 ## PARCC score limited to Baltimore
 
 library(readxl)
-PARCC <- read_excel("PARCC.xlsx")
+PARCC <- read_excel("PARCC.xlsx") # ND: This file is not in your repository
 View(PARCC)
 
 PARCC_scores <- read_excel("PARCC.xlsx")
@@ -59,3 +61,18 @@ save(merged_data, file="merged_data_CC.Rda")
 
 # Subset the data by each school number (to convert from long to wide)
 merged_data$`School Name` <- merged_data$`Admin1-The school administration promptly responds to my concerns` <- merged_data$`Admin9-Parents have the opportunity to give input into the school's decisions` <- merged_data$`Creative1-Student work in the arts is displayed or presented in my child's school`<-  NULL
+
+
+
+### Feedback from ND ###
+# Note, In the code above I added comments that begin with "# ND:". Feel free to remove these as you read them.
+#
+# Readability: Approaches expectations - Make sure your styling is more consistent and intentional. Also, please declutter and organize your repository.
+# Reproducibility: Does not meet expectations - Your data was missing. I was unable get your project to run.
+#
+# Also, I don't see an example of a successful reshape using pivot_longer or pivot_wider.
+#
+# Potential grade if this was the final product: B-
+###
+
+
