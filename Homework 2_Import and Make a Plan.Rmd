@@ -8,12 +8,12 @@ output: html_notebook
 ```{r}
 # Import & Rename SF Data
 View(SF_Data)
-SF_Data_1 <-read.csv("SF_Data.csv", TRUE, ",")
-SF_Data_1
+SF_Data <-read.csv("SF_Data.csv", TRUE, ",")
+View(SF_Data)
 ```
 
 ```{r}
 ## Exploratory Data Analysis Plan
-# Merge Demographic Data (SF_Data_1), with Suspension Data (SF_Data_2)
-# Analyze suspension by enrollment, farms, and ELL populations
+# Merge Demographic Data (SF_Data_1.csv), with Foster Youth (Foster_Youth_Data.csv)
+# Analyze foster youth by enrollment, CALPADS, and ELL populations
 ```
