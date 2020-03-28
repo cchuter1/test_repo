@@ -7,6 +7,7 @@ output: html_notebook
 
 ```{r}
 # Import & Rename SF Data
+library(readr)
 View(SF_Data)
 SF_Data <-read.csv("SF_Data.csv", TRUE, ",")
 View(SF_Data)
