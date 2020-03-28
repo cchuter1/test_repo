@@ -1,0 +1,24 @@
+---
+title: "Homework 2_Import and Make a Plan"
+# Author: Claire Chuter
+output: html_notebook
+---
+. 
+
+```{r}
+# Import & Rename SF Data
+View(SF_Data)
+SF_Data_1 <-read.csv("SF_Data.csv", TRUE, ",")
+SF_Data_1
+```
+
+```{r}
+## Exploratory Data Analysis Plan
+# Merge Demographic Data (SF_Data_1), with Suspension Data (SF_Data_2)
+# Analyze suspension by enrollment, farms, and ELL populations
+```
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
