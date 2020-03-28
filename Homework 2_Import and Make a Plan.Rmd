@@ -15,6 +15,6 @@ View(SF_Data)
 
 ```{r}
 ## Exploratory Data Analysis Plan
-# Merge Demographic Data (SF_Data_1.csv), with Foster Youth (Foster_Youth_Data.csv)
-# Analyze foster youth by enrollment, CALPADS, and ELL populations
+# Merge Demographic Data (SF_Data_1.csv), with Suspension Data (Suspension Data.txt)
+# Analyze suspension by enrollment, CALPADS, and ELL populations
 ```
