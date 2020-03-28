@@ -1,0 +1,73 @@
+---
+title: "Homework 3_Identify Variables and Identifiers"
+#Author: Claire Chuter
+output: html_notebook
+---
+```{r}
+# Load Demographic Data
+library(readr)
+SF_Data <- read_csv("~/Desktop/git_project/SF_Data.csv")
+View(SF_Data)
+
+# Load Suspension Data
+library(base)
+read.delim(file = "~/Desktop/git_project/Suspension Data.txt", header = TRUE, sep = " ", dec = ".")
+View(Suspension_Data)
+```
+
+
+```{r}
+#SF_Data Variables
+# schid = school code
+# farms = number of students qualifying for free and reduced meals
+# foster = number of foster studnets by school
+# homeless = number of homeless students by school
+# migrant = number of migrant students by school
+# ell = number of students with ELL status 
+```
+
+```{r}
+# Remove unnecessary columns
+SF_Data <- subset( SF_Data, select = -c(1:3, 5:18,23:24, 26:27))
+
+# Rename column names (currently column names begin in row 2)
+names(SF_Data)[1] <- "School Code"
+names(SF_Data)[2] <- "Free and Reduced Meal Program"
+names(SF_Data)[3] <- "Foster"
+names(SF_Data)[4] <- "Homeless"
+names(SF_Data)[5] <- "Migrant Program"
+names(SF_Data)[6] <- "English  Learner  (EL)"
+```
+
+```{r}
+# Remove rows 1 and 2
+Demographic_Data <- SF_Data[-1, ] # To remove the 1st row
+Demographic_Data <- SF_Data[-1, ] # To remove the 2nd row
+#SF_Data is now ready to merge
+```
+
+```{r}
+#Suspension.data Variables
+# scid = school code
+# suspension_rate_total = suspension count by school
+# suspension_violent = violent suspension count by school
+# suspension_weapon = weapon suspension count by school
+# suspension_drug = illicit drug suspension count by school
+# suspension_defiance = defiance suspension count by school
+# suspension_other = other reasons for suspension count by school
+
+```
+
+```{r}
+# Remove unnecessry columns
+Suspension_Data <- subset( Suspension.Data, select = -c(1:4, 6:11,13:15))
+View(Suspension_Data)
+
+```
+
+
+```{r}
+# Check for a common identifier between the datasets
+# Merge on School Code
+```
+
