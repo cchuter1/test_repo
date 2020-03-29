@@ -1,0 +1,83 @@
+---
+title: "Homework 3_Identify Variables and Identifiers"
+#Author: Claire Chuter
+output: html_notebook
+---
+```{r}
+# Load Demographic Data
+library(readr)
+Demographic_Data <- read_csv("~/Desktop/git_project/SF_Data.csv")
+View(Demographic_Data)
+
+# Load Suspension Data
+library(readr)
+Suspension_Data <- read_csv("~/Desktop/git_project/Suspension_Data_2.0.csv")
+View(Suspension_Data)
+```
+
+
+```{r}
+# Demographic_Data Variables
+# schid = school code
+# farms = number of students qualifying for free and reduced meals
+# foster = number of foster studnets by school
+# homeless = number of homeless students by school
+# migrant = number of migrant students by school
+# ell = number of students with ELL status 
+```
+
+```{r}
+# Remove unnecessary columns
+Demographic_Data <- subset( Demographic_Data, select = -c(1:3, 5:18,23:24, 26:27))
+
+# Rename column names (currently column names begin in row 2)
+names(Demographic_Data)[1] <- "schid"
+names(Demographic_Data)[2] <- "farms"
+names(Demographic_Data)[3] <- "foster"
+names(Demographic_Data)[4] <- "homeless"
+names(Demographic_Data)[5] <- "migrant"
+names(Demographic_Data)[6] <- "ell"
+```
+
+```{r}
+# Remove rows 1 and 2
+Demographic_Data <- Demographic_Data[-c(1, 2), ]
+View(Demographic_Data)
+#Demographic_Data is now ready to merge
+```
+
+```{r}
+#Suspension.data Variables
+# schid = school code
+# suspension_rate_total = suspension, count by school
+# suspension_violent = violent suspension with injury, count by school
+# suspension_violent_no_injury = violent suspension without injury, count by school
+# suspension_weapon = weapon suspension, count by school
+# suspension_drug = illicit drug suspension, count by school
+# suspension_defiance = defiance suspension, count by school
+# suspension_other = other reasons for suspension, count by school
+
+```
+
+
+```{r}
+# Remove unnecessry columns
+Suspension_Data <- subset( Suspension_Data, select = -c(1:4, 6:11,13:15))
+View(Suspension_Data)
+
+```
+
+
+```{r}
+names(Suspension_Data)[1:8] <- c("schid","suspension_rate_total", "suspension_violent", "suspension_violent_no_injury", "suspension_weapon", "suspension_drug", "suspension_defiance","suspension_other")
+```
+
+```{r}
+# Check for a common identifier between the datasets
+# Merge data by schid
+merged_data <- merge(x = Demographic_Data,
+                         y = Suspension_Data,
+                         by = "schid",
+                         all = FALSE)
+```
+
