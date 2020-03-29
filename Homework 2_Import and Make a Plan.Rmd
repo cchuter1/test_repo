@@ -8,13 +8,12 @@ output: html_notebook
 ```{r}
 # Import & Rename SF Data
 library(readr)
-View(SF_Data)
-SF_Data <-read.csv("SF_Data.csv", TRUE, ",")
-View(SF_Data)
+Demographic_Data <- read_csv("~/Desktop/git_project/SF_Data.csv")
+View(Demographic_Data)
 ```
 
 ```{r}
 ## Exploratory Data Analysis Plan
 # Merge Demographic Data (SF_Data_1.csv), with Suspension Data (Suspension Data.txt)
-# Analyze suspension by enrollment, CALPADS, and ELL populations
+# Analyze suspension by enrollment, numb. of foster students, # of homeless students, # of migrant students, farms, and ELL status
 ```
