@@ -6,7 +6,8 @@ output: html_notebook
 
 ```{r}
 # Import and Rename SF Data
-View(SF_Data)
-SF_Data_1 <-read.csv("SF_Data.csv", TRUE, ",")
-SF_Data_1
+library(readr)
+Demographic_Data <- read_csv("~/Desktop/git_project/SF_Data.csv")
+View(Demographic_Data)
 ```
+
