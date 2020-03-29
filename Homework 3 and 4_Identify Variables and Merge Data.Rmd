@@ -81,3 +81,17 @@ merged_data <- merge(x = Demographic_Data,
                          all = FALSE)
 ```
 
+```{r}
+# What is the mean suspension rate for schools  overall?
+mean(merged_data$suspension_rate_total,na.rm = T)
+
+# What is the mean suspension rate for schools with farms > 100? 
+mean(merged_data$suspension_rate_total[merged_data$farms > 100], na.rm = T)
+
+# What is the mean suspension rate for schools with farms < 100? 
+mean(merged_data$suspension_rate_total[merged_data$farms < 100], na.rm = T)
+
+## Nothing too interesting here, I had hypothesized that schools with fewer farms would have higher suspension rates, but that seems to not be the case.
+
+```
+
