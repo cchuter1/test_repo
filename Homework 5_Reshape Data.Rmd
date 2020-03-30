@@ -1,0 +1,34 @@
+---
+title: "Homework 5: Reshape Data"
+# Author: Claire Chuter
+output: html_notebook
+---
+
+
+```{r}
+# Load Merged Data
+library(tidyr)
+load(file = "merged_data.RData")
+```
+
+```{r}
+na.omit(merged_data) #Remove NA's
+# Convert all character column names into numeric
+merged_data$suspension_violent <-
+  as.numeric(merged_data$suspension_violent)
+merged_data$suspension_violent_no_injury <-
+  as.numeric(merged_data$suspension_violent_no_injury)
+merged_data$suspension_weapon <-
+  as.numeric(merged_data$suspension_weapon)
+merged_data$suspension_drug <-
+  as.numeric(merged_data$suspension_drug)
+merged_data$suspension_defiance <-
+  as.numeric(merged_data$suspension_defiance)
+merged_data$suspension_other <-
+  as.numeric(merged_data$suspension_other)
+long_data <- pivot_longer(merged_data, cols = 7:13, names_to = "all suspensions", values_to = "count")
+```
+
+```{r}
+merged_data <- pivot_wider(long_data, id_cols = 1:6, names_from = "all suspensions", values_from = "count")
+```
