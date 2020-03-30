@@ -26,9 +26,15 @@ merged_data$suspension_defiance <-
   as.numeric(merged_data$suspension_defiance)
 merged_data$suspension_other <-
   as.numeric(merged_data$suspension_other)
-long_data <- pivot_longer(merged_data, cols = 7:13, names_to = "all suspensions", values_to = "count")
 ```
 
 ```{r}
+# Pivot longer, combining suspension data
+long_data <- pivot_longer(merged_data, cols = 7:13, names_to = "all suspensions", values_to = "count")
+```
+
+
+```{r}
+# Pivot wider, breaking down suspension data
 merged_data <- pivot_wider(long_data, id_cols = 1:6, names_from = "all suspensions", values_from = "count")
 ```
