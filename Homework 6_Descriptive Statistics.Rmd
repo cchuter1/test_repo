@@ -1,0 +1,75 @@
+---
+title: "Homework 6_Descriptive Statistics"
+# Author: Claire Chuter
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(summarytools)
+library(stargazer)
+install.packages('patchwork')
+library(patchwork)
+load(file = "merged_data.RData")
+```
+
+## Analytics
+
+### Descriptive Statistics
+
+```{r}
+# Convert homeless character column name into numeric
+merged_data$homeless <-
+  as.numeric(merged_data$homeless)
+
+with(merged_data, descr(homeless))
+```
+
+### Frequency Tables
+
+```{r}
+with(merged_data, freq(suspension_violent))
+
+with(merged_data, freq(suspension_violent_no_injury))
+
+with(merged_data, freq(suspension_weapon))
+
+with(merged_data, freq(suspension_drug))
+
+with(merged_data, freq(suspension_defiance))
+
+with(merged_data, freq(suspension_other))
+```
+
+### Contingency Table
+
+```{r}
+with(merged_data, ctable(suspension_rate_total, homeless, prop="c"))
+```
+
+### Correlation Table
+
+```{r}
+# Convert foster and migrant character column names into numeric
+merged_data$foster <-
+  as.numeric(merged_data$foster)
+merged_data$migrant <-
+  as.numeric(merged_data$migrant)
+merged_data$ell <-
+  as.numeric(merged_data$ell)
+with(merged_data, cor(select(merged_data, farms, homeless, foster, migrant, ell, suspension_rate_total)))
+```
+
+### Linear Regression
+
+```{r}
+fit_lr <- lm(suspension_rate_total ~ farms, data=merged_data)
+summary(fit_lr)
+```
+
+### Multiple Regression
+
+```{r}
+fit_mr <- lm(suspension_rate_total ~ migrant + ell + farms + homeless, data=merged_data)
+summary(fit_mr)
+```
