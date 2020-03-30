@@ -82,16 +82,32 @@ merged_data <- merge(x = Demographic_Data,
 ```
 
 ```{r}
+# Tidy Data
+library(base)
+merged_data$suspension_rate_total[merged_data$suspension_rate_total == '*'] <- NA
+merged_data$suspension_rate_total <- as.numeric(merged_data$suspension_rate_total)
+merged_data$farms <- as.numeric(gsub(",", "", merged_data$farms))
+
 # What is the mean suspension rate for schools  overall?
-mean(merged_data$suspension_rate_total,na.rm = T)
+mean(merged_data$suspension_rate_total, na.rm = TRUE)
+
 
 # What is the mean suspension rate for schools with farms > 100? 
-mean(merged_data$suspension_rate_total[merged_data$farms > 100], na.rm = T)
+names(merged_data)[2] <- "farms"
+mean(merged_data$suspension_rate_total[farms < 100], na.rm = T)
 
 # What is the mean suspension rate for schools with farms < 100? 
-mean(merged_data$suspension_rate_total[merged_data$farms < 100], na.rm = T)
+mean(merged_data$suspension_rate_total[farms > 100], na.rm = T)
+
 
 ## Nothing too interesting here, I had hypothesized that schools with fewer farms would have higher suspension rates, but that seems to not be the case.
+```
+
+```{r}
+# What is the max suspension rate for schools? 
+max(merged_data$suspension_rate_total,na.rm = T)
+min(merged_data$suspension_rate_total,na.rm = T)
+sum(merged_data$suspension_rate_total == 0, na.rm = T)
 
 ```
 
