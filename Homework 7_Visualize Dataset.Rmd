@@ -1,0 +1,158 @@
+---
+title: "Homework 7_Visualize Dataset"
+# Author: Claire Chuter
+output: html_notebook
+---
+
+```{r}
+rm(list = ls())
+library(ggplot2)
+library(tidyr)
+library(tidyverse)
+library(patchwork)
+load(file = "merged_data.RData")
+```
+
+
+## Visualization
+
+### Univariate Plots {.tabset}
+
+#### Histogram
+
+```{r}
+ggplot(data=merged_data) +
+  geom_histogram(aes(x=farms, color=I("black"), fill=I("goldenrod")), bins=30)
+```
+
+#### Density
+
+```{r}
+ggplot(data=merged_data) +
+  geom_density(aes(x=farms_pct, color=I("black"), fill=I("darkslategray4")))
+```
+
+#### Box Plot + Violin
+
+```{r}
+
+# first we create our groups of low, middle & high amount of homeless 
+merged_data <- transform(merged_data, 
+          group = cut(
+            suspension_rate_total_pct, 
+            c(0, .5, 1, 1.5, 2), 
+            include.lowest = TRUE,
+            labels = c("low", "lowish", "highish", "high")))
+
+## then we plot the data using ggplot
+ggplot(merged_data, aes(x = group , y = farms_pct, color=I("black"), fill=I("violetred"))) +
+  geom_boxplot()
+                                                            
+ggplot(merged_data, aes(farms_pct, ell_pct, color=I("black"), fill=I("lightcyan"))) + 
+  geom_violin()
+
+```
+
+### Multivariate Plots {.tabset}
+
+#### Scatter Plot
+
+```{r}
+ggplot(merged_data, aes(ell_pct, farms_pct)) + 
+  geom_point(colour = "cornflowerblue", size = 4)
+# Many schools have no migrant students and low populations of homeless students. There is a wider range of migrant percentages of students within schools than homeless.  
+```
+
+#### Scatter Plot with Jitter
+
+```{r}
+ggplot(merged_data, aes(ell_pct, farms_pct)) + 
+  geom_point(colour = "cornflowerblue", size = 4, shape = 1, position = "jitter") 
+```
+
+#### Scatter Plot with Linear Regression Fit
+
+```{r}
+ggplot(merged_data, aes(y = (100 - ell_pct), x = farms_pct)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE)
+# Fairly homoskedastic model
+```
+
+#### Scatter Plot with Polynomial Fit
+
+```{r}
+ggplot(merged_data, aes(y = (100 - ell_pct), x = farms_pct)) +
+  geom_point() +
+  geom_smooth(method = "lm", formula=y ~ poly(x, 2), se = TRUE)
+```
+
+#### Scatter Plot with Nonparametric Fit
+
+```{r}
+ggplot(merged_data, aes(y = (100 - ell_pct), x = farms_pct)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = TRUE)
+```
+
+### Multiples
+
+#### Faceting
+
+```{r}
+ggplot(merged_data) +
+  geom_point(aes(y = (100- ell_pct), x = farms_pct)) +
+  facet_wrap(vars(schtype))
+```
+
+
+```{r}
+ggplot(merged_data) +
+  geom_point(aes(y = (100 - ell_pct), x = farms_pct)) +
+  facet_grid(vars(schtype))
+```
+
+#### Patchwork
+
+```{r}
+p_H <- merged_data %>%
+  filter(schtype == "High Schools (Public)") %>%
+  ggplot +
+    geom_point(aes(y = (100 - ell_pct), x = farms_pct))
+p_MH <- merged_data %>%
+  filter(schtype == "Intermediate/Middle Schools (Public)") %>%
+  ggplot +
+    geom_point(aes(y = (100 - ell_pct), x = farms_pct))
+p_H + p_MH
+```
+
+
+```{r}
+p1 <- ggplot(merged_data) +
+  geom_point(aes(y = (100 - ell_pct), x = farms_pct)) +
+  scale_x_continuous(position = "top") +
+  theme_minimal()
+p2 <- ggplot(merged_data) +
+  geom_area(aes(x = (100 - ell_pct)), stat="density") +
+  coord_flip() +
+  theme_void()
+p3 <- ggplot(merged_data) +
+  geom_area(aes(x = farms_pct), stat="density") +
+  scale_y_reverse() +
+  theme_void()
+  
+(p1 | p2) / (p3 | plot_spacer())
+```
+
+```{r}
+layout <- "
+AAAAAB
+AAAAAB
+AAAAAB
+AAAAAB
+AAAAAB
+CCCCC#
+"
+p1 + p2 + p3 +
+  plot_layout(design = layout)
+```
