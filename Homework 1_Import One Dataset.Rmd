@@ -5,9 +5,9 @@ output: html_notebook
 ---
 
 ```{r}
+rm(list = ls())
 # Import and Rename SF Data
 library(readr)
 Demographic_Data <- read_csv("~/Desktop/git_project/SF_Data.csv")
 View(Demographic_Data)
 ```
-
