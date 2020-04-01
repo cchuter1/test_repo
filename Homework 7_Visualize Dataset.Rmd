@@ -45,7 +45,7 @@ merged_data <- transform(merged_data,
             labels = c("low", "lowish", "highish", "high")))
 
 ## then we plot the data using ggplot
-ggplot(merged_data, aes(x = group , y = farms_pct, color=I("black"), fill=I("violetred"))) +
+ggplot(merged_data, aes(x = suspension_rate_total_pct , y = farms_pct, color=I("black"), fill=I("violetred"))) +
   geom_boxplot()
                                                             
 ggplot(merged_data, aes(farms_pct, ell_pct, color=I("black"), fill=I("lightcyan"))) + 
