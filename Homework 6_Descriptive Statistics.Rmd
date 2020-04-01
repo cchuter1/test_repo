@@ -5,6 +5,7 @@ output: html_notebook
 ---
 
 ```{r}
+rm(list = ls())
 library(tidyverse)
 library(summarytools)
 library(stargazer)
@@ -18,10 +19,6 @@ load(file = "merged_data.RData")
 ### Descriptive Statistics
 
 ```{r}
-# Convert homeless character column name into numeric
-merged_data$homeless <-
-  as.numeric(merged_data$homeless)
-
 with(merged_data, descr(homeless))
 ```
 
@@ -50,13 +47,6 @@ with(merged_data, ctable(suspension_rate_total, homeless, prop="c"))
 ### Correlation Table
 
 ```{r}
-# Convert foster and migrant character column names into numeric
-merged_data$foster <-
-  as.numeric(merged_data$foster)
-merged_data$migrant <-
-  as.numeric(merged_data$migrant)
-merged_data$ell <-
-  as.numeric(merged_data$ell)
 with(merged_data, cor(select(merged_data, farms, homeless, foster, migrant, ell, suspension_rate_total)))
 ```
 
