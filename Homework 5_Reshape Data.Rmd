@@ -6,14 +6,19 @@ output: html_notebook
 
 
 ```{r}
+rm(list = ls())
 # Load Merged Data
 library(tidyr)
-load(file = "merged_data.RData")
+load(file = "merged_data.Rdata")
 ```
 
 ```{r}
-na.omit(merged_data) #Remove NA's
-# Convert all character column names into numeric
+#Remove NA's
+na.omit(merged_data) 
+
+# Convert suspension character column names into numeric
+merged_data$suspension_rate_total <-
+  as.numeric(merged_data$suspension_rate_total)
 merged_data$suspension_violent <-
   as.numeric(merged_data$suspension_violent)
 merged_data$suspension_violent_no_injury <-
@@ -30,11 +35,44 @@ merged_data$suspension_other <-
 
 ```{r}
 # Pivot longer, combining suspension data
-long_data <- pivot_longer(merged_data, cols = 7:13, names_to = "all suspensions", values_to = "count")
+long_data <- pivot_longer(merged_data, cols = 9:14, names_to = "all suspensions", values_to = "count")
 ```
 
 
 ```{r}
 # Pivot wider, breaking down suspension data
-merged_data <- pivot_wider(long_data, id_cols = 1:6, names_from = "all suspensions", values_from = "count")
+merged_data <- pivot_wider(long_data, names_from = "all suspensions", values_from = "count")
 ```
+
+```{r}
+# Create variables to show percent rather than counts of variables based on enrollment
+# farms, foster, homeless, migrant, suspension_rate_total
+merged_data$farms <-
+  as.numeric(merged_data$farms)
+merged_data$foster <-
+  as.numeric(merged_data$foster)
+merged_data$migrant <-
+  as.numeric(merged_data$migrant)
+merged_data$ell <-
+  as.numeric(merged_data$ell)
+merged_data$homeless <-
+  as.numeric(merged_data$homeless)
+merged_data$suspension_rate_total <-
+  as.numeric(merged_data$suspension_rate_total)
+merged_data$enrollment <-
+  as.numeric(merged_data$enrollment)
+merged_data[, "farms_pct"] <- merged_data[, "farms"] / merged_data[, "enrollment"]
+merged_data[, "foster_pct"] <- merged_data[, "foster"] / merged_data[, "enrollment"]
+merged_data[, "migrant_pct"] <- merged_data[, "migrant"] / merged_data[, "enrollment"]
+merged_data[, "ell_pct"] <- merged_data[, "ell"] / merged_data[, "enrollment"]
+merged_data[, "homeless_pct"] <- merged_data[, "homeless"] / merged_data[, "enrollment"]
+merged_data[, "ell_pct"] <- merged_data[, "ell"] / merged_data[, "enrollment"]
+merged_data[, "suspension_rate_total_pct"] <- merged_data[, "suspension_rate_total"] / merged_data[, "enrollment"]
+
+```
+
+```{r}
+save.image()
+save(merged_data, file = "merged_data.Rdata")
+```
+
