@@ -1,0 +1,181 @@
+---
+#Data Workflow Final_CC
+##Claire Chuter"
+output: html_document
+---
+  
+```{r, echo=FALSE}
+#LOAD PACKAGES
+library(readr)
+library(stargazer)
+library(haven)
+library(base)
+library(tidyr)
+library(tidyverse)
+library(patchwork)
+library(summarytools)
+library(corrplot)
+library(ggplot2)
+library(PerformanceAnalytics)
+library(Hmisc)
+library(xtable)
+library(agricolae)
+library(ggcorrplot)
+library(dplyr)
+library(kableExtra)
+library(reshape)
+library(lawstat)
+library(effsize)
+```
+
+```{r, echo=FALSE}
+##LOAD DATA
+VR_Data <- read_dta("SAILCombinedDataSets4-25-14 (1).dta")
+View(VR_Data)
+```
+
+```{r, echo=FALSE}
+##RENAME VARIABLES
+require(reshape)
+
+VR_Data <- rename(VR_Data, c(RELATIONSHIP="Relationship"))
+VR_Data <- rename(VR_Data, c(TotalOwnerCommission="Commission"))
+VR_Data <- rename(VR_Data, c(anxiety="Anxiety"))
+VR_Data <- rename(VR_Data, c(enjoy="Enjoyment"))
+VR_Data <- rename(VR_Data, c(NEG_EFFICACY="Negotiation efficacy"))
+VR_Data <- rename(VR_Data, c(SIM_VALUES="Similar values"))
+VR_Data <- rename(VR_Data, c(BEH_SIM="Similar behaviors"))
+VR_Data <- rename(VR_Data, c(sptconf="SPT confidence"))
+VR_Data <- rename(VR_Data, c(spteffort="SPT effort self"))
+VR_Data <- rename(VR_Data, c(SPTEFFORT_OTHER="SPT effort other"))
+VR_Data <- rename(VR_Data, c(COOP_MOTIV="Cooperative motivation"))
+VR_Data <- rename(VR_Data, c(COMP_MOTIV="Competitive motivation"))
+```
+
+```{r}
+##VARIABLE CHEAT SHEET
+
+# Relationship
+# Commission
+# Anxiety
+# Enjoyment
+# Negot. efficacy
+# Similar Values
+# Similar Behaviors
+# SPT confidence
+# SPT Effort Self
+# SPT Effort Other
+# Cooperative motivation
+# Competitive motivation
+```
+
+##Descriptive Statistics
+```{r, echo=FALSE}
+round(VR_Data %>%
+    summarise(English = sum(English, na.rm=TRUE) / n(),
+            White = sum(White, na.rm=TRUE) / n(),
+            male = sum(male, na.rm=TRUE) / n(),
+            Age = mean(age, na.rm=TRUE),
+            Education = median(education, na.rm=TRUE)), 2) %>%
+   kable() %>%
+  kable_styling()
+```
+
+##REPLICATE CORRELATION MATRIX
+```{r, echo=FALSE}
+Correlation_Data_Subset <- subset( VR_Data, select = c(24:34, 38))
+round(cor(Correlation_Data_Subset, use = "pairwise.complete.obs"), 2) %>%
+   kable() %>%
+  kable_styling()
+
+#Visualization
+ggcorrplot(cor(Correlation_Data_Subset, use = "pairwise.complete.obs"))
+```
+
+##LEVENE'S TEST; RELATIONSHIP BY TREATMENT
+```{r, echo=FALSE}
+#Create subset
+ANOVA_Relationship_Subset <- subset( VR_Data, select = c(25, 38, 42:46))
+ANOVA_Relationship_Subset <- na.omit(ANOVA_Relationship_Subset)
+ANOVA_Relationship_Subset<- pivot_longer(ANOVA_Relationship_Subset, cols = 3:7, names_to = "treatment", values_to = "count")
+ANOVA_Relationship_Subset<-ANOVA_Relationship_Subset[!(ANOVA_Relationship_Subset$count==0),]
+
+#Levene's Test
+lawstat::levene.test(ANOVA_Relationship_Subset$Relationship, ANOVA_Relationship_Subset$treatment, location = "mean")
+
+#Bartlett's Test
+bartlett.test(Relationship~treatment, data = ANOVA_Relationship_Subset)
+
+#Both tests demonstrate homogeneity, although Bartlett's test is slightly weaker evidence against the null hypothesis. 
+```
+
+##LEVENE'S TEST; COMMISSION BY TREATMENT
+```{r, echo=FALSE}
+#Levene's Test
+lawstat::levene.test(ANOVA_Relationship_Subset$Commission, ANOVA_Relationship_Subset$treatment, location = "mean")
+
+#Bartlett's Test
+bartlett.test(Commission~treatment, data = ANOVA_Relationship_Subset)
+
+#Again, both tests demonstrate homogeneity, although Bartlett's test is slightly weaker evidence against the null hypothesis. 
+```
+
+##ONE-WAY ANOVA; RELATIONSHIP BY TREATMENT
+```{r, echo=FALSE}
+#Test
+Anova_Results <- aov(Relationship ~ treatment, data = ANOVA_Relationship_Subset)
+summary(Anova_Results)
+#Significant differences at the 10% level.
+
+ANOVA_Relationship_Subset %>% group_by(treatment) %>%
+     summarise(Count = n(),
+               Mean = mean(Relationship), 
+               SD = round(sd(Relationship),3), 
+               SE = round(SD / sqrt(Count),3), 
+               Lower = round(Mean - SE*qt(.975,Count),3), 
+               Upper = round(Mean + SE*qt(.975,Count),3))  %>%
+ kable() %>%
+  kable_styling()
+```
+
+##ONE-WAY ANOVA; COMMISSION BY TREATMENT
+```{r, echo=FALSE}
+##Test
+Anova_Results <- aov(Commission ~ treatment, data = ANOVA_Relationship_Subset)
+summary(Anova_Results)
+#Significant differences at the 1% level.
+
+#Table
+ANOVA_Relationship_Subset %>% group_by(treatment) %>%
+     summarise(Count = n(),
+               Mean = mean(Commission), 
+               SD = round(sd(Commission),3), 
+               SE = round(SD / sqrt(Count),3), 
+               Lower = round(Mean - SE*qt(.975,Count),3), 
+               Upper = round(Mean + SE*qt(.975,Count),3))  %>%
+ kable() %>%
+  kable_styling()
+```
+
+##SCHEFFE TEST; RELATIONSHIP BY TREATMENT
+```{r, echo=FALSE}
+data(ANOVA_Relationship_Subset)
+model<-aov(Relationship~treatment, data=ANOVA_Relationship_Subset)
+comparison <- scheffe.test(model,"treatment", group=TRUE,console=TRUE,
+main="Relationship of ANOVA_Relationship_Subset with different treatment")
+
+#Groups are not significantly different (but I suspect this is my fault due to wrong data)
+```
+
+##SCHEFFE TEST; COMMISSION BY TREATMENT
+```{r, echo=FALSE}
+data(ANOVA_Relationship_Subset)
+model<-aov(Commission~treatment, data=ANOVA_Relationship_Subset)
+comparison <- scheffe.test(model,"treatment", group=TRUE,console=TRUE,
+main="Relationship of ANOVA_Relationship_Subset with different treatment")
+
+#Groups are not significantly different 
+```
+
+
+
